@@ -1,0 +1,33 @@
+name: Update CricHD Playlist
+
+on:
+  schedule:
+    - cron: "*/5 * * * *"
+  workflow_dispatch:
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Download ALL.m3u
+        run: |
+          curl -L --fail \
+          https://raw.githubusercontent.com/abusaeeidx/T-Sports-Playlist-Auto-Update/refs/heads/main/combine_playlist.m3u \
+          -o crichd.m3u
+
+      - name: Git config
+        run: |
+          git config user.name "${{ secrets.GIT_U }}"
+          git config user.email "${{ secrets.GIT_E }}"
+
+      - name: Commit & Push
+        run: |
+          git add bd.m3u
+          git commit -m "Auto update ALL.m3u (every 5 min)" || echo "No changes"
+          git push origin main --force
