@@ -1,4 +1,4 @@
-name: Update CricHD Playlist
+name: Update Playlist
 
 on:
   schedule:
